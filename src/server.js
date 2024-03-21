@@ -1,17 +1,17 @@
 require("dotenv").config();
-const db = require("./config/mysql")
+const db = require("./config/mysql");
+const mongoDB = require("./config/mongodb");
 
 class Server {
   constructor() {
-    this.init()
+    this.init();
   }
 
   async init() {
     try {
-        await db.authenticate().then(() => console.log("Mysql Server Connect"))
-    } catch (error) {
-        
-    }
+      await db.authenticate().then(() => console.log("Mysql Server Connect"));
+      await mongoDB.connect().then(() => console.log("Mongodb Server Connect"));
+    } catch (error) {}
   }
 }
 
