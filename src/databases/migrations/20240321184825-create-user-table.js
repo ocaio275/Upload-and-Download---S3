@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("user", {
+    await queryInterface.createTable("users", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -36,8 +36,8 @@ module.exports = {
       },
     });
     await queryInterface.sequelize.query(`
-      CREATE TRIGGER before_insert_user
-      BEFORE INSERT ON user
+      CREATE TRIGGER before_insert_users
+      BEFORE INSERT ON users
       FOR EACH ROW
       IF(new.id is null)
         THEN SET new.id = uuid();
@@ -46,6 +46,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("user");
+    await queryInterface.dropTable("users");
   },
 };
