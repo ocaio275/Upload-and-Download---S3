@@ -13,8 +13,8 @@ class App {
     expressConfig(this.app)
   }
 
-  initConfigRoutes() {
-    configRouter(this.app)
+  async initConfigRoutes() {
+    await configRouter(this.app)
   }
 }
 
