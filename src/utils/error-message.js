@@ -11,6 +11,11 @@ const ERROR_MESSAGE = {
     NEW_PASSWORD_EMPTY: "New password is required",
     PASSWORD_INCORRECT: "Password is incorrect",
   },
+  UPLOAD: {
+    FILE_EMPTY: "File is empty",
+    FILE_NOT_FOUND: "File not found",
+    DOCUMENT_NOT_FOUND: "Document not found",
+  }
 };
 
 module.exports = ERROR_MESSAGE;
