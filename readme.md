@@ -62,12 +62,12 @@ Este repositório contém uma API desenvolvida com o objetivo de criar usuários
         ### Rotas User
         | Metodo | Caminho | Descrição | Autenticação |
         | --- | --- | --- | --- |
-        | `POST` | /users/register  | Criação de usuário[¹] |     ✔ |
+        | `POST` | /users/register  | Criação de usuário |     ✔ |
         | `POST` | /users/login  | Login no sistema|  ✔ |
         | `PATCH`| /user/update/password/:userId | Atualizar senha |  🔒 |
         | `DELETE`| /user/delete/:userId | Remover usuário |      🔒 |
 
-        #### [¹]:Criação de usuário
+        #### Criação de usuário
         No body da requisição, adicione o seguinte objeto JSON para criar o usuário:
         ```json
             {
