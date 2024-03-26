@@ -10,7 +10,8 @@
     "mg:all": "npx sequelize-cli db:migrate",
     "mg:undo": "npx sequelize-cli db:undo",
     "seed:all": "npx sequelize-cli db:seed:all",
-    "seed:undo": "npx sequelize-cli db:seed:undo"
+    "seed:undo": "npx sequelize-cli db:seed:undo",
+    "dc:up": "docker-compose up --build -d"
   },
   "keywords": [],
   "author": "Caio Oliveira",

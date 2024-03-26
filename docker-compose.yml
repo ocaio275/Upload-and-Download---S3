@@ -1,0 +1,21 @@
+version: '3.0'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "documents"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./../volumes/mysql:/var/lib/mysql
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./../volumes/mongo:/data/db
+      
