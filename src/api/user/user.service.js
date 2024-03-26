@@ -1,16 +1,16 @@
 const UserRepository = require("./user.repository");
-const crypto = require("crypto");
 const ERROR_MESSAGE = require("../../utils/error-message");
-
-const { SECRET_KEY } = process.env;
+const { hashPassword } = require("../../libs/crypton");
+const { pick } = require("lodash");
+const { encode } = require("../../libs/jwt");
 
 class UserService {
   constructor() {
     this.userRepository = new UserRepository();
   }
-  
-  async findAllUsers() {
-    return await this.userRepository.findAll();
+
+  async updateById(id, params) {
+    return await this.userRepository.updateById(id, params);
   }
 
   async createUser(user) {
@@ -18,10 +18,10 @@ class UserService {
 
     this.verifyPasswordConfirmation(password, confirmPassword);
     await this.verifyEmail(email);
-    const hashPassword = this.hashPassword(password);
+    const hashCreatePassword = hashPassword(password);
     const userData = {
       email,
-      password: hashPassword,
+      password: hashCreatePassword,
     };
     return await this.userRepository.createUser(userData);
   }
@@ -32,13 +32,6 @@ class UserService {
     }
   }
 
-  hashPassword(password) {
-    return crypto
-      .createHmac("sha256", SECRET_KEY)
-      .update(password)
-      .digest("hex");
-  }
-
   async verifyEmail(email) {
     const user = await this.userRepository.findByEmail(email);
     if (user) {
@@ -47,30 +40,30 @@ class UserService {
   }
 
   async updatePassword(data) {
-    const { id, oldPassword, newPassword, confirmPassword } = data;
+    const { userId, oldPassword, newPassword, confirmPassword } = data;
 
-    const userExists = await this.userRepository.findById(id)
+    const userExists = await this.userRepository.findById(userId);
 
     if (!userExists) {
       throw new Error(ERROR_MESSAGE.USER.USER_NOT_FOUND);
     }
 
-    const hashOldPassword = this.hashPassword(oldPassword)
-    if (hashOldPassword!== userExists?.password) {
+    const hashOldPassword = hashPassword(oldPassword);
+    if (hashOldPassword !== userExists?.password) {
       throw new Error(ERROR_MESSAGE.USER.OLD_PASSWORD_DOES_NOT_MATCH);
     }
 
     this.verifyPasswordConfirmation(newPassword, confirmPassword);
 
-    const hashNewPassword = this.hashPassword(newPassword)
+    const hashNewPassword = hashPassword(newPassword);
 
-    return await this.userRepository.updatePassword(id, hashNewPassword);
+    return await this.userRepository.updatePassword(userId, hashNewPassword);
   }
 
   async deleteUser(data) {
-    const { id, password, confirmPassword } = data;
+    const { userId, password, confirmPassword } = data;
 
-    const userExists = await this.userRepository.findById(id)
+    const userExists = await this.userRepository.findById(userId);
 
     if (!userExists) {
       throw new Error(ERROR_MESSAGE.USER.USER_NOT_FOUND);
@@ -78,13 +71,34 @@ class UserService {
 
     this.verifyPasswordConfirmation(password, confirmPassword);
 
-    return await this.userRepository.deleteUser(id);
+    return await this.userRepository.deleteUser(userId);
   }
 
   async findById(id) {
     return await this.userRepository.findById(id);
   }
 
+  async findByEmail(email) {
+    return await this.userRepository.findByEmail(email);
+  }
+
+  async generateToken({ email, password }) {
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new Error(ERROR_MESSAGE.USER.USER_NOT_FOUND);
+    }
+
+    const hashOldPassword = hashPassword(password);
+    if (hashOldPassword !== user?.password) {
+      throw new Error(ERROR_MESSAGE.USER.PASSWORD_INCORRECT);
+    }
+    const params = pick(user, ["id", "email"]);
+
+    const token = encode(params);
+
+    return token;
+  }
 }
 
 module.exports = UserService;

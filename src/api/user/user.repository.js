@@ -9,12 +9,6 @@ class UsersRepository {
     return await this.userModel.create(user);
   }
 
-  async findAll() {
-    return await this.userModel.findAll({
-      attributes: { exclude: ["password"] },
-    });
-  }
-
   async findByEmail(email) {
     return await this.userModel.findOne({
       where: {
@@ -33,6 +27,10 @@ class UsersRepository {
 
   async deleteUser(id) {
     return await this.userModel.destroy({ where: { id } });
+  }
+
+  async updateById(id, params) {
+    return await this.userModel.update(... params, { where: { id } });
   }
 }
 
