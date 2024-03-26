@@ -62,8 +62,8 @@ Este repositório contém uma API desenvolvida com o objetivo de criar usuários
         ### Rotas User
         | Metodo | Caminho | Descrição | Autenticação |
         | --- | --- | --- | --- |
-        | `POST` | /users/register  | Criação de usuário |     ✔ |
-        | `POST` | /users/login  | Login no sistema|  ✔ |
+        | `POST` | /users/register  | Criação de usuário |    🔓  |
+        | `POST` | /users/login  | Login no sistema|  🔓 |
         | `PATCH`| /user/update/password/:userId | Atualizar senha |  🔒 |
         | `DELETE`| /user/delete/:userId | Remover usuário |      🔒 |
 
